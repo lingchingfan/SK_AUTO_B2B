@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<!--
+  旅遊險投保輸入畫面：版面改善示意（靜態網頁）
+  建立：2026-11-24 木木醬
+  來源：BHAS101003 旅遊險要保畫面截圖
+  說明：純 HTML + CSS + 少量 JavaScript，不連後端；下拉選單內容、受益人區塊是示意，標「待確認」。
+-->
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>旅遊險投保（版面改善示意）</title>
+<style>
+  :root {
+    --navy: #1d3a6b;
+    --navy-2: #2b4f8c;
+    --bg: #f3f5f9;
+    --card: #ffffff;
+    --line: #d9dfe8;
+    --text: #1f2633;
+    --muted: #667085;
+    --red: #c4320a;
+    --green: #1a7f37;
+    --focus: #3b82f6;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.5 "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  }
+
+  /* 頁首與步驟 */
+  header.top { background: var(--navy); color: #fff; padding: 14px 24px; }
+  header.top h1 { margin: 0; font-size: 20px; font-weight: 600; }
+  header.top small { opacity: .8; }
+  .steps { display: flex; gap: 8px; padding: 12px 24px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .steps a { white-space: nowrap; text-decoration: none; color: var(--muted); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 14px; }
+  .steps a .n { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; background: var(--line); color: var(--text); margin-right: 6px; font-size: 12px; }
+  .steps a:hover { border-color: var(--navy-2); color: var(--navy); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 20px 16px 110px; }
+
+  /* 區塊卡片 */
+  section.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 18px; scroll-margin-top: 12px; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+  .card-head h2 { margin: 0; font-size: 17px; color: var(--navy); }
+  .card-head h2 .n { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; background: var(--navy); color: #fff; font-size: 13px; margin-right: 8px; }
+  .hint { color: var(--red); font-size: 13px; }
+  .card-body { padding: 16px 18px 6px; }
+  .sub { font-size: 14px; font-weight: 600; color: var(--muted); margin: 8px 0 10px; padding-bottom: 4px; border-bottom: 1px dashed var(--line); }
+
+  /* 欄位格線：桌機 4 欄、平板 2 欄、手機 1 欄 */
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 18px; margin-bottom: 12px; }
+  .span-2 { grid-column: span 2; }
+  .span-4 { grid-column: 1 / -1; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } .span-2 { grid-column: auto; } }
+
+  .field label.lb { display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .req::after { content: " *"; color: var(--red); }
+  .field .help { display: block; font-size: 12px; color: var(--muted); margin-top: 3px; }
+  input[type=text], input[type=email], input[type=tel], input[type=date], select {
+    width: 100%; height: 38px; padding: 6px 10px; border: 1px solid #c3cbd8; border-radius: 6px;
+    font: inherit; background: #fff; color: var(--text);
+  }
+  input:focus, select:focus, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-color: var(--focus); }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row > input, .row > select { flex: 1; min-width: 0; }
+  .row > button { flex-shrink: 0; }
+  .row .zip { flex: 0 0 90px; }
+  .row .hour { flex: 0 0 92px; }
+
+  /* 是／否 單選 */
+  .yn { display: inline-flex; border: 1px solid #c3cbd8; border-radius: 6px; overflow: hidden; }
+  .yn input { position: absolute; opacity: 0; pointer-events: none; }
+  .yn label { padding: 7px 18px; cursor: pointer; font-size: 14px; }
+  .yn label + input + label { border-left: 1px solid #c3cbd8; }
+  .yn input:checked + label { background: var(--navy); color: #fff; }
+  .yn input:focus-visible + label { outline: 2px solid var(--focus); }
+  .q { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; background: #f8f9fc; border: 1px solid var(--line); border-radius: 6px; }
+  .q span { font-size: 14px; }
+  .q .yn { flex-shrink: 0; }
+
+  /* 按鈕 */
+  button, .btn { font: inherit; font-size: 14px; height: 38px; padding: 0 14px; border-radius: 6px; border: 1px solid #c3cbd8; background: #fff; color: var(--text); cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; }
+  button:hover, .btn:hover { border-color: var(--navy-2); color: var(--navy); }
+  .btn-primary { background: var(--green); border-color: var(--green); color: #fff; }
+  .btn-primary:hover { background: #156b2e; color: #fff; }
+  .btn-navy { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .btn-navy:hover { background: var(--navy-2); color: #fff; }
+  .link { color: var(--navy-2); font-size: 14px; }
+  .chk { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; }
+
+  /* 保險天數顯示 */
+  .days { display: flex; align-items: baseline; gap: 6px; height: 38px; }
+  .days b { font-size: 24px; color: var(--navy); }
+  .days.bad b { color: var(--red); }
+
+  /* 被保人清單 */
+  table.list { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 14px; }
+  table.list th, table.list td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+  table.list th { background: #f0f3f8; color: var(--muted); font-weight: 600; }
+  table.list .empty td { color: var(--muted); text-align: center; }
+  .table-wrap { overflow-x: auto; }
+
+  details.flight summary { cursor: pointer; padding: 12px 18px; font-weight: 600; color: var(--navy); list-style: none; }
+  details.flight summary::before { content: "＋ "; }
+  details.flight[open] summary::before { content: "－ "; }
+
+  .todo { display: inline-block; font-size: 12px; color: #9a6700; background: #fff8c5; border: 1px solid #e9d38a; border-radius: 4px; padding: 0 6px; margin-left: 6px; }
+
+  /* 底部固定操作列 */
+  .actionbar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid var(--line); box-shadow: 0 -2px 8px rgba(0,0,0,.06); }
+  .actionbar .inner { max-width: 1180px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 10px; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
+  .actionbar .sum { margin-right: auto; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>旅遊險投保</h1>
+  <small>版面改善示意｜靜態網頁，不會送出資料</small>
+</header>
+
+<nav class="steps" aria-label="填寫步驟">
+  <a href="#s1"><span class="n">1</span>保險期間與地點</a>
+  <a href="#s2"><span class="n">2</span>要保人</a>
+  <a href="#s3"><span class="n">3</span>被保人</a>
+  <a href="#s4"><span class="n">4</span>受益人</a>
+</nav>
+
+<main>
+<form id="f" onsubmit="return false">
+
+  <!-- 1. 保險期間與旅遊地點 -->
+  <section class="card" id="s1">
+    <div class="card-head">
+      <h2><span class="n">1</span>保險期間與旅遊地點</h2>
+      <span class="hint">國內最長 15 日；國外最長 60 日</span>
+    </div>
+    <div class="card-body">
+      <div class="grid">
+        <div class="field span-2">
+          <label class="lb req" for="dStart">起保日期／時間</label>
+          <div class="row">
+            <input type="date" id="dStart">
+            <select id="hStart" class="hour" aria-label="起保時"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="lb req" for="dEnd">迄保日期／時間</label>
+          <div class="row">
+            <input type="date" id="dEnd">
+            <select id="hEnd" class="hour" aria-label="迄保時"></select>
+          </div>
+        </div>
+        <div class="field">
+          <span class="lb">保險天數</span>
+          <div class="days" id="daysBox"><b id="days">–</b>天</div>
+          <span class="help" id="daysMsg">選好日期自動計算</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="field span-2">
+          <label class="lb req" for="area1">旅遊地點 1</label>
+          <div class="row">
+            <select id="area1" aria-label="地區">
+              <option value="">選擇地區</option>
+              <option>國內</option><option>亞洲</option><option>歐洲</option><option>美洲</option><option>其他</option>
+            </select>
+            <select id="country1" aria-label="國家">
+              <option value="">選擇國家</option>
+              <option>日本</option><option>韓國</option><option>泰國</option>
+            </select>
+            <button type="button" onclick="alert('示意：新增旅遊地點 2')">＋ 更多地點</button>
+          </div>
+          <span class="help">下拉內容為示意 <span class="todo">待確認</span> <a class="link" href="#" onclick="return false">日本地區資訊</a></span>
+        </div>
+        <div class="field span-2">
+          <span class="lb">申根公約國證明文件</span>
+          <div class="yn" role="radiogroup" aria-label="申根公約國證明文件">
+            <input type="radio" name="schengen" id="sc1" value="Y"><label for="sc1">需要</label>
+            <input type="radio" name="schengen" id="sc0" value="N" checked><label for="sc0">不需要</label>
+          </div>
+          <span class="help">前往申根區國家辦簽證時需要</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 要保人 -->
+  <section class="card" id="s2">
+    <div class="card-head">
+      <h2><span class="n">2</span>要保人資訊</h2>
+      <span class="hint">建議要保人須年滿 18 歲</span>
+    </div>
+    <div class="card-body">
+      <div class="sub">基本資料</div>
+      <div class="grid">
+        <div class="field">
+          <label class="lb req" for="aName">要保人名稱</label>
+          <input type="text" id="aName">
+        </div>
+        <div class="field">
+          <label class="lb req" for="aId">要保人 ID</label>
+          <div class="row">
+            <input type="text" id="aId" maxlength="10">
+            <button type="button" onclick="alert('示意：法人帶入資料')">法人帶入</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="lb req" for="aBirth">生日</label>
+          <input type="date" id="aBirth">
+          <span class="help">原畫面格式：民國 750101</span>
+        </div>
+        <div class="field">
+          <label class="lb" for="aBoss">負責人姓名</label>
+          <input type="text" id="aBoss">
+          <span class="help">要保人是法人時填寫</span>
+        </div>
+      </div>
+
+      <div class="sub">聯絡方式</div>
+      <div class="grid">
+        <div class="field">
+          <label class="lb req" for="aMobile">行動電話</label>
+          <input type="tel" id="aMobile" placeholder="09xxxxxxxx">
+        </div>
+        <div class="field">
+          <label class="lb" for="aTel">聯絡電話</label>
+          <input type="tel" id="aTel">
+        </div>
+        <div class="field">
+          <label class="lb" for="aMail">電子郵件</label>
+          <input type="email" id="aMail">
+        </div>
+        <div class="field">
+          <label class="lb" for="aEpolicy">電子保單</label>
+          <select id="aEpolicy"><option>是</option><option>否</option></select>
+        </div>
+        <div class="field span-4">
+          <label class="lb req" for="aAddr">聯絡地址</label>
+          <div class="row">
+            <input type="text" id="aZip" class="zip" placeholder="郵遞區號" aria-label="要保人郵遞區號">
+            <button type="button" onclick="alert('示意：郵遞區號查詢')">查詢</button>
+            <input type="text" id="aAddr">
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">告知事項</div>
+      <div class="grid">
+        <div class="field span-2">
+          <div class="q">
+            <span>被保險人是否已投保其他商業實支實付型傷害醫療保險或實支實付型醫療保險？</span>
+            <div class="yn">
+              <input type="radio" name="other" id="ot1" value="Y"><label for="ot1">是</label>
+              <input type="radio" name="other" id="ot0" value="N"><label for="ot0">否</label>
+            </div>
+          </div>
+        </div>
+        <div class="field span-2">
+          <div class="q">
+            <span>被保險人目前是否受有監護宣告？</span>
+            <div class="yn">
+              <input type="radio" name="guard" id="gd1" value="Y"><label for="gd1">是</label>
+              <input type="radio" name="guard" id="gd0" value="N" checked><label for="gd0">否</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="flight">
+      <summary>班機延誤快速理賠服務（選填）</summary>
+      <div class="card-body">
+        <p class="help" style="margin-top:0">原畫面為「＋」展開區塊，欄位內容 <span class="todo">待確認</span></p>
+        <div class="grid">
+          <div class="field"><label class="lb" for="fNo">去程航班編號</label><input type="text" id="fNo" placeholder="例：CI100"></div>
+          <div class="field"><label class="lb" for="fDate">去程日期</label><input type="date" id="fDate"></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 3. 被保人 -->
+  <section class="card" id="s3">
+    <div class="card-head">
+      <h2><span class="n">3</span>被保人資訊</h2>
+      <div class="row">
+        <button type="button" onclick="alert('示意：名冊上傳')">名冊上傳</button>
+        <a class="link" href="#" onclick="return false">範例下載</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="list" aria-label="已加入的被保人">
+          <thead><tr><th>#</th><th>姓名</th><th>ID</th><th>生日</th><th>與要保人關係</th><th>操作</th></tr></thead>
+          <tbody id="insList"><tr class="empty"><td colspan="6">尚未加入被保人，填寫下方資料後按「加入被保人」</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <label class="chk"><input type="checkbox" id="sameAll"> 被保人同要保人（帶入姓名、ID、生日、地址、電話）</label>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label class="lb req" for="iName">被保人名稱</label>
+          <input type="text" id="iName">
+        </div>
+        <div class="field">
+          <label class="lb req" for="iId">被保人 ID</label>
+          <input type="text" id="iId" maxlength="10">
+          <label class="chk help"><input type="checkbox" id="iForeign"> 持外國護照</label>
+        </div>
+        <div class="field">
+          <label class="lb req" for="iBirth">生日</label>
+          <input type="date" id="iBirth">
+        </div>
+        <div class="field">
+          <label class="lb req" for="iSex">性別</label>
+          <select id="iSex"><option value="">請選擇</option><option>男</option><option>女</option></select>
+        </div>
+        <div class="field">
+          <label class="lb req" for="iRel">與要保人關係</label>
+          <select id="iRel"><option value="">請選擇</option><option>本人</option><option>配偶</option><option>子女</option><option>父母</option><option>其他</option></select>
+          <span class="help">選項為示意 <span class="todo">待確認</span></span>
+        </div>
+        <div class="field">
+          <label class="lb" for="iMobile">行動電話</label>
+          <input type="tel" id="iMobile">
+        </div>
+        <div class="field span-2">
+          <label class="lb" for="iMail">電子郵件</label>
+          <input type="email" id="iMail">
+        </div>
+        <div class="field span-4">
+          <label class="lb req" for="iAddr">聯絡地址</label>
+          <div class="row">
+            <input type="text" id="iZip" class="zip" placeholder="郵遞區號" aria-label="被保人郵遞區號">
+            <button type="button" onclick="alert('示意：郵遞區號查詢')">查詢</button>
+            <input type="text" id="iAddr">
+          </div>
+        </div>
+      </div>
+
+      <div class="sub">出國資料</div>
+      <div class="grid">
+        <div class="field">
+          <label class="lb" for="iEng">英文姓名</label>
+          <input type="text" id="iEng" placeholder="同護照，例：WANG DA MING">
+        </div>
+        <div class="field">
+          <label class="lb" for="iPass">護照號碼</label>
+          <input type="text" id="iPass">
+        </div>
+        <div class="field span-2">
+          <div class="q">
+            <span>被保險人是否為孕婦？</span>
+            <div class="yn">
+              <input type="radio" name="preg" id="pg1" value="Y"><label for="pg1">是</label>
+              <input type="radio" name="preg" id="pg0" value="N" checked><label for="pg0">否</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="justify-content:flex-end; margin: 4px 0 14px;">
+        <button type="button" id="btnClear">清空</button>
+        <button type="button" class="btn-primary" id="btnAdd">＋ 加入被保人</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 受益人 -->
+  <section class="card" id="s4">
+    <div class="card-head"><h2><span class="n">4</span>受益人資訊</h2></div>
+    <div class="card-body">
+      <p class="help" style="margin-top:0">原畫面截圖未顯示此區欄位 <span class="todo">待確認</span>。先保留區塊位置。</p>
+    </div>
+  </section>
+
+</form>
+</main>
+
+<div class="actionbar">
+  <div class="inner">
+    <span class="sum" id="sum">被保人 0 位｜保險天數 –</span>
+    <button type="button" onclick="alert('示意：暫存')">暫存</button>
+    <button type="button" class="btn-navy" onclick="alert('示意：下一步／試算保費')">下一步：試算保費</button>
+  </div>
+</div>
+
+<script>
+  // 時（00~23）下拉
+  ['hStart', 'hEnd'].forEach(function (id) {
+    var s = document.getElementById(id);
+    for (var h = 0; h < 24; h++) {
+      var o = document.createElement('option');
+      o.value = h; o.textContent = (h < 10 ? '0' : '') + h + ' 時';
+      if (h === 1) o.selected = true;
+      s.appendChild(o);
+    }
+  });
+
+  var $ = function (id) { return document.getElementById(id); };
+  var insured = [];
+
+  // 保險天數：迄日 - 起日 + 1（與原畫面「共 X 天」相同算法，待確認）
+  function calcDays() {
+    var a = $('dStart').value, b = $('dEnd').value, box = $('daysBox'), msg = $('daysMsg');
+    if (!a || !b) { $('days').textContent = '–'; msg.textContent = '選好日期自動計算'; box.classList.remove('bad'); updateSum(); return; }
+    var d = Math.round((new Date(b) - new Date(a)) / 86400000) + 1;
+    $('days').textContent = d;
+    var domestic = $('area1').value === '國內', max = domestic ? 15 : 60;
+    if (d < 1) { box.classList.add('bad'); msg.textContent = '迄日不可早於起日'; }
+    else if (d > max) { box.classList.add('bad'); msg.textContent = (domestic ? '國內' : '國外') + '最長 ' + max + ' 日'; }
+    else { box.classList.remove('bad'); msg.textContent = (domestic ? '國內' : '國外') + '上限 ' + max + ' 日'; }
+    updateSum();
+  }
+  ['dStart', 'dEnd', 'area1'].forEach(function (id) { $(id).addEventListener('change', calcDays); });
+
+  // 被保人同要保人
+  var pairs = [['aName', 'iName'], ['aId', 'iId'], ['aBirth', 'iBirth'], ['aZip', 'iZip'], ['aAddr', 'iAddr'], ['aMobile', 'iMobile'], ['aMail', 'iMail']];
+  $('sameAll').addEventListener('change', function () {
+    var on = this.checked;
+    pairs.forEach(function (p) { if (on) $(p[1]).value = $(p[0]).value; $(p[1]).readOnly = on; });
+    if (on) $('iRel').value = '本人';
+  });
+
+  // 加入／刪除被保人
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function render() {
+    var tb = $('insList');
+    if (!insured.length) { tb.innerHTML = '<tr class="empty"><td colspan="6">尚未加入被保人，填寫下方資料後按「加入被保人」</td></tr>'; }
+    else {
+      tb.innerHTML = insured.map(function (p, i) {
+        return '<tr><td>' + (i + 1) + '</td><td>' + esc(p.name) + '</td><td>' + esc(p.id) + '</td><td>' + esc(p.birth) + '</td><td>' + esc(p.rel) + '</td><td><button type="button" data-del="' + i + '">刪除</button></td></tr>';
+      }).join('');
+    }
+    updateSum();
+  }
+  $('insList').addEventListener('click', function (e) {
+    var i = e.target.getAttribute('data-del');
+    if (i !== null) { insured.splice(+i, 1); render(); }
+  });
+  function clearInsured() {
+    ['iName', 'iId', 'iBirth', 'iZip', 'iAddr', 'iMobile', 'iMail', 'iEng', 'iPass', 'iSex', 'iRel'].forEach(function (id) { $(id).value = ''; $(id).readOnly = false; });
+    $('sameAll').checked = false; $('iForeign').checked = false; $('pg0').checked = true;
+  }
+  $('btnClear').addEventListener('click', clearInsured);
+  $('btnAdd').addEventListener('click', function () {
+    var need = [['iName', '被保人名稱'], ['iId', '被保人 ID'], ['iBirth', '生日'], ['iRel', '與要保人關係']];
+    for (var k = 0; k < need.length; k++) {
+      if (!$(need[k][0]).value) { alert('請填寫「' + need[k][1] + '」'); $(need[k][0]).focus(); return; }
+    }
+    insured.push({ name: $('iName').value, id: $('iId').value, birth: $('iBirth').value, rel: $('iRel').value });
+    clearInsured(); render();
+  });
+
+  function updateSum() {
+    $('sum').textContent = '被保人 ' + insured.length + ' 位｜保險天數 ' + $('days').textContent;
+  }
+</script>
+</body>
+</html>
