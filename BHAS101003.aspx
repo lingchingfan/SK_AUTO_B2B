@@ -784,10 +784,233 @@
                 margin-bottom: 14px;
             }
         }
+
+        /* 參考 index.html：卡片化區塊、步驟導覽與更清楚的操作層級 */
+        #Form1 {
+            background: #f3f5f9;
+        }
+
+        .b2b-step-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            max-width: 1240px;
+            margin: 0 auto 12px;
+            padding: 8px 10px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(29, 58, 107, 0.08);
+        }
+
+        .b2b-step-nav a {
+            flex: 0 0 auto;
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 11px;
+            color: #667085;
+            text-decoration: none;
+            border: 1px solid #d9dfe8;
+            border-radius: 999px;
+            background: #fff;
+            font-size: 14px;
+        }
+
+        .b2b-step-nav a:hover {
+            color: #1d3a6b;
+            border-color: #2b4f8c;
+        }
+
+        .b2b-step-nav .step-no {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e4e9f1;
+            color: #1f2633;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        #Form1 > table[border="0"] {
+            max-width: 1240px;
+            margin: 8px auto !important;
+            background: #fff;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(29, 58, 107, 0.06);
+        }
+
+        #Form1 > table[border="0"] td {
+            padding: 8px 10px;
+        }
+
+        .tblDataArea {
+            max-width: 1240px;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(29, 58, 107, 0.08);
+            overflow: hidden;
+        }
+
+        .tblDataArea tr[id] {
+            scroll-margin-top: 70px;
+        }
+
+        .tblDataArea td {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        .tblDataArea td[style*="background-color: #99ccff"],
+        .tblDataArea td[style*="background-color:#99ccff"],
+        .tblDataArea td.auto-style2,
+        .tblDataArea td[style*="height: 30px"][colspan="10"] {
+            background: #edf3fa !important;
+            color: #1d3a6b !important;
+            border-color: #d9dfe8 !important;
+            border-bottom: 1px solid #cfd8e5 !important;
+        }
+
+        .tblDataArea td[style*="background-color: #99ccff"] b,
+        .tblDataArea td[style*="background-color:#99ccff"] b,
+        .tblDataArea td[style*="height: 30px"][colspan="10"] b {
+            color: #1d3a6b;
+        }
+
+        .tdDataCaption,
+        .tdDataCaptionCenter,
+        .auto-style4,
+        .auto-style10 {
+            background: #f7f9fc !important;
+            color: #44546a !important;
+            border-color: #dde4ec !important;
+        }
+
+        .tdDataField,
+        .tdDataFieldCenter,
+        .auto-style5,
+        .auto-style8,
+        .auto-style11 {
+            background: #fff !important;
+            border-color: #dde4ec !important;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            min-height: 38px;
+            line-height: 38px;
+            border: 1px solid #c3cbd8;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14);
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        input[type="button"],
+        input[type="submit"],
+        .cssUICommandButton,
+        .auto-style13 {
+            min-height: 38px;
+            border: 1px solid #c3cbd8 !important;
+            border-radius: 6px !important;
+            background: #fff !important;
+            color: #1d3a6b !important;
+            box-shadow: none;
+        }
+
+        input[type="button"]:hover,
+        input[type="submit"]:hover,
+        .cssUICommandButton:hover,
+        .auto-style13:hover {
+            background: #edf3fa !important;
+            border-color: #2b4f8c !important;
+            color: #1d3a6b !important;
+        }
+
+        #divfunc input[type="submit"] {
+            min-width: 170px;
+            margin: 5px 4px;
+        }
+
+        #IISSU_N {
+            background: #1a7f37 !important;
+            border-color: #1a7f37 !important;
+            color: #fff !important;
+        }
+
+        #IISSU_N:hover {
+            background: #156b2e !important;
+            border-color: #156b2e !important;
+        }
+
+        marquee {
+            margin: 8px auto;
+            max-width: 1240px;
+            border: 1px solid #e9d38a;
+            border-radius: 6px;
+            background: #fff8c5;
+            color: #9a6700;
+        }
+
+        .cssDataGrid {
+            border: 1px solid #d9dfe8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .cssDataGrid th,
+        .cssDataGridHeader {
+            background: #2b4f8c !important;
+        }
+
+        @media (max-width: 980px) {
+            .b2b-step-nav {
+                margin-left: 8px;
+                margin-right: 8px;
+            }
+
+            #Form1 > table[border="0"] {
+                width: calc(100% - 16px) !important;
+            }
+
+            .tblDataArea {
+                min-width: 980px;
+            }
+        }
     </style>
 </head>
 <body ms_positioning="FlowLayout">
     <form id="Form1" method="post" runat="server">
+        <nav class="b2b-step-nav" aria-label="投保填寫區塊">
+            <a href="#b2b-s1"><span class="step-no">1</span>保險期間與地點</a>
+            <a href="#b2b-s2"><span class="step-no">2</span>要保人</a>
+            <a href="#b2b-s3"><span class="step-no">3</span>被保人</a>
+            <a href="#b2b-s4"><span class="step-no">4</span>受益人</a>
+            <a href="#b2b-s5"><span class="step-no">5</span>保障與方案</a>
+        </nav>
         <ucbs:ucBSModel ID="ucBSModelModal" runat="server" />
         <asp:Label ID="Label1" ForeColor="Red" runat="server" Style="padding: 10px; font-size: 20pt;"></asp:Label>
         <input id="hidUrl"
@@ -862,7 +1085,7 @@
                                     <asp:Label ID="Label16" ForeColor="Red" runat="server" Font-Bold="True" Font-Size="Small" Text="「國內地區」僅受理投保人數2人(含)以上要保作業！"></asp:Label>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr id="b2b-s1" runat="server">
                                 <td style="background-color: #99ccff; height: 30px" colspan="5">
                                     <p align="left">
                                         <b>[旅遊資訊]</b>
@@ -1055,7 +1278,7 @@
 
 
 
-                            <tr>
+                            <tr id="b2b-s2" runat="server">
                                 <td style="background-color: #99ccff; height: 30px" colspan="9">
                                     <p align="left">
                                         <b><b>[</b>要保人資訊]</b><font color="red">(建議要保人須年滿18歲)
@@ -1267,7 +1490,7 @@
                             <tr id="Show7" runat="server" height="20">
                                 <td colspan="10" />
                             </tr>
-                            <tr>
+                            <tr id="b2b-s3" runat="server">
                                 <td style="background-color: #99ccff" colspan="3"><b><b>[</b>被保人資訊]&nbsp;</b><input id="uploadM" value="名冊上傳" type="button">
                                     <a href="Insured_List_ITP.xls" target="_blank" download ><b>範例下載</b></a></td>
                                 <td style="background-color: #99ccff" colspan="7">
@@ -1353,7 +1576,7 @@
                                 <td class="tdDataCaption"></td>
                                 <td class="tdDataField"><font face="新細明體"></font></td>
                             </tr>
-                            <tr>
+                            <tr id="b2b-s4" runat="server">
                                 <td style="background-color: #99ccff; height: 30px" colspan="10"><b><b><b>[</b></b>受益人資訊]</b>
                                     <div style="display:none">
                                         <asp:DropDownList ID="ddl_IINS" runat="server" BackColor="White" Width="80">
@@ -1477,7 +1700,7 @@
                     </table>
                     <table class="tblDataArea" width="100%">
                         <tbody>
-                            <tr>
+                            <tr id="b2b-s5" runat="server">
                                 <td style="background-color: #99ccff; height: 30px" colspan="5">
                                     <p align="left">
                                         <b><b><b>[</b></b>旅平險保障內容]</b>
